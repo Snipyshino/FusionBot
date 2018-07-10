@@ -25,6 +25,9 @@
     "@swimlane/ngx-charts": "^8.1.0",
     "angular2-highcharts": "^0.5.5",
     "core-js": "^2.5.4",
+    "highcharts": "^6.1.1",
+    "highcharts-data": "^0.1.7",
+    "highcharts-more": "^0.1.7",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },

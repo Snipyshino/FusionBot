@@ -1,10 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HighchartsMore} from 'highcharts-more';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
+    imports: [
+        CommonModule,
+        HighchartsMore
+    ],
+    declarations: []
 })
-export class DataDisplayModule { }
+export class DataDisplayModule {
+}

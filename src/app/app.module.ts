@@ -1,19 +1,14 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {AppComponent} from './app.component';
 import {DataDisplayComponent} from './graph-area/data-display/data-display.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {NgxUIModule} from '@intergral/kaleidoscope';
-import {HighchartsStatic} from 'angular2-highcharts/dist/HighchartsService';
-import {ChartModule} from 'angular2-highcharts';
-import * as highcharts from 'highcharts';
-import {NgxChartsModule} from '@swimlane/ngx-charts';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { ChartModule } from 'angular2-highcharts';
+import {HttpClientModule} from '@angular/common/http';
 
 declare var require: any;
-// import * as highChartsMore from 'highcharts/highcharts-more';
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -26,7 +21,6 @@ declare var require: any;
         BrowserAnimationsModule,
         RouterModule,
         NgxUIModule,
-        NgxChartsModule,
         RouterModule.forRoot( [
             {
                 path: 'ema-graph',
@@ -35,17 +29,9 @@ declare var require: any;
         ])
     ],
     providers: [
-        {
-            provide: HighchartsStatic,
-            useFactory: highchartsFactory
-        }
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: [NO_ERRORS_SCHEMA]
 })
 export class AppModule {
-}
-
-export function highchartsFactory() {
-   // highChartsMore(highcharts);
-    return highcharts;
 }
