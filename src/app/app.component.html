@@ -1,8 +1,14 @@
 <ngx-toolbar
-    [img]="'https://www.fusion-reactor.com/wp-content/themes/Aqua/images/fr_white.png'"
-    [leftmenu]="toolbarMenuLeft"
-    [showTimePicker]="false"
+        [leftmenu]="toolbarMenuLeft"
+        [showTimePicker]="false"
 >
+    <ngx-toolbar-title>
+        <a
+        routerLink="/">
+            <img height="40 px"
+                 src='https://www.fusion-reactor.com/wp-content/themes/Aqua/images/fr_white.png'>
+        </a>
+    </ngx-toolbar-title>
 
 </ngx-toolbar>
 <router-outlet></router-outlet>
