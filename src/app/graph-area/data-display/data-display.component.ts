@@ -51,7 +51,7 @@ export class DataDisplayComponent implements OnInit {
                     //     enable: true,
                     // },
                     title: {
-                        text: 'CPU Temperature',
+                        text: 'CPU Utilization',
                         style: {
                             color: '#FFF',
                             fontWeight: 'bold'
