@@ -4,6 +4,7 @@ import * as Highcharts from 'highcharts';
 
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
+require('highcharts/modules/map')(Highcharts);
 let cpuGraph;
 
 @Component({
@@ -23,7 +24,7 @@ export class DataDisplayComponent implements OnInit {
     ngOnInit() {
         this.fusionbot.getData().subscribe((data) => {
                 const graphData = data.data.map((d, k) => {
-                    return [k, d];
+                    return [k, parseFloat(d)];
                 });
                 const emaGraphData = data.ema.map((d, k) => {
                     return [k, parseFloat(d)];
@@ -46,6 +47,9 @@ export class DataDisplayComponent implements OnInit {
                             ]
                         }
                     },
+                    // navigator: {
+                    //     enable: true,
+                    // },
                     title: {
                         text: 'CPU Temperature',
                         style: {
@@ -106,7 +110,6 @@ export class DataDisplayComponent implements OnInit {
                         name: 'AI Error Margin',
                         data: emsRanges,
                         type: 'arearange'
-
                     }, {
                         name: 'AI Prediction',
                         data: emaGraphData
