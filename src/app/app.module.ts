@@ -15,7 +15,9 @@ export function highchartsFactory() {
     const hce = require('highcharts/indicators/ema');
     const hci = require('highcharts/indicators/indicators');
     const dd = require('highcharts/modules/exporting');
+    const ndm = require('highcharts/modules/no-data-to-display');
     dd(hc);
+    ndm(hc);
     hm(hc);
     hci(hc);
     hce(hc);

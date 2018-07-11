@@ -19,5 +19,9 @@ export class AppComponent {
                 tooltip: 'EMA Line Graph',
                 active: false
             }
+            // {
+            //     icon: 'icon-alert',
+            //     click: () => {}
+            // }
         ];
 }

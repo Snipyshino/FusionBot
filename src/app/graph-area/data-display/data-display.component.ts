@@ -68,6 +68,16 @@ export class DataDisplayComponent implements OnInit {
                     }
                 }
             },
+            lang: {
+                noData: 'Nichts zu anzeigen'
+            },
+            noData: {
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '15px',
+                    color: '#DD3333'
+                }
+            },
             legend: {
                 enabled: true,
                 itemStyle: {
@@ -78,13 +88,6 @@ export class DataDisplayComponent implements OnInit {
                 },
                 itemHiddenStyle: {
                     color: '#555'
-                }
-            },
-            noData: {
-                style: {
-                    fontWeight: 'bold',
-                    fontSize: '15px',
-                    color: '#303030'
                 }
             },
             labels: {
