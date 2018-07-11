@@ -1,6 +1,7 @@
 <div>
     <ngx-atom-spinner *ngIf="!loaded"
 ></ngx-atom-spinner>
-<chart *ngIf="loaded" type="StockChart" [options]="options">
+<chart *ngIf="loaded" type="StockChart" [options]="options"
+(load)="saveInstance($event.context)">
 </chart>
 </div>

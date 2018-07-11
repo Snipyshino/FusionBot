@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FusionbotService} from '../../fusionbot.service';
+import {environment} from '../../../environments/environment';
+import * as io from 'socket.io-client';
 
 @Component({
     selector: 'app-data-display',
@@ -7,6 +9,8 @@ import {FusionbotService} from '../../fusionbot.service';
     styleUrls: ['./data-display.component.css']
 })
 export class DataDisplayComponent implements OnInit {
+    private socket: any;
+    private chart: any;
 
     constructor(private fusionbot: FusionbotService) {
         this.options = {
@@ -118,7 +122,7 @@ export class DataDisplayComponent implements OnInit {
                 type: 'line',
                 zIndex: 2,
 
-                    color: '#6300ff'
+                color: '#6300ff'
 
             }, {
                 name: 'AI Error Margin',
@@ -126,7 +130,7 @@ export class DataDisplayComponent implements OnInit {
                 zIndex: 1,
                 type: 'arearange',
 
-                    color: '#a47cff'
+                color: '#a47cff'
 
             }, {
                 name: 'Anomaly',
@@ -147,8 +151,17 @@ export class DataDisplayComponent implements OnInit {
     public options: any;
     public loaded = false;
 
+    saveInstance(chartInstance: any): void {
+        this.chart = chartInstance;
+    }
+
     ngOnInit() {
-        this.fusionbot.getData().subscribe((data) => {
+        this.socket = io(environment.socketUrl);
+        this.socket.on('connect', () => {
+            console.log('connected');
+            this.loaded = true;
+        });
+        this.socket.on('data', (data) => {
                 const graphData = data.data.map((d) => {
                     return parseFloat(d);
                 });
@@ -167,11 +180,7 @@ export class DataDisplayComponent implements OnInit {
                 this.options.series[1].data = emaGraphData;
                 this.options.series[2].data = emsRanges;
                 this.options.series[3].data = anomalies;
-                console.log(this.options);
-
-                setTimeout(() => {
-                    this.loaded = true;
-                }, 5000);
+                this.chart.redraw();
             }
         );
     }

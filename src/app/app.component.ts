@@ -21,7 +21,9 @@ export class AppComponent {
             }
             // {
             //     icon: 'icon-alert',
-            //     click: () => {}
+            //     click: () => {
+            //          this.router.navigate(['anomaly-list']);
+            //  }
             // }
         ];
 }

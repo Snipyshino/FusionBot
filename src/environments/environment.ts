@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-    restUrl: 'http://10.1.0.2:3000'
+    restUrl: 'http://10.1.0.2:3000',
+    socketUrl: 'http://10.1.0.2:3001'
 };
 
 /*
