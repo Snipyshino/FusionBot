@@ -7,6 +7,22 @@ import {RouterModule} from '@angular/router';
 import {NgxUIModule} from '@intergral/kaleidoscope';
 import { ChartModule } from 'angular2-highcharts';
 import {HttpClientModule} from '@angular/common/http';
+import {HighchartsStatic} from 'angular2-highcharts/dist/HighchartsService';
+
+export function highchartsFactory() {
+    const hm = require('highcharts/highcharts-more');
+    const hc = require('highcharts/highstock');
+    const hce = require('highcharts/indicators/ema');
+    const hci = require('highcharts/indicators/indicators');
+    const dd = require('highcharts/modules/exporting');
+    dd(hc);
+    hm(hc);
+    hci(hc);
+    hce(hc);
+    return hc;
+}
+
+
 
 declare var require: any;
 @NgModule({
@@ -16,7 +32,11 @@ declare var require: any;
     ],
     imports: [
         BrowserModule,
-        ChartModule.forRoot(require('highcharts')),
+        ChartModule.forRoot(
+            -       require('highcharts')
+            +       require('highcharts/highcharts-more')
+            +       require('highcharts/highstock')
+        ),
         HttpClientModule,
         BrowserAnimationsModule,
         RouterModule,
@@ -29,6 +49,10 @@ declare var require: any;
         ])
     ],
     providers: [
+        {
+            provide: HighchartsStatic,
+            useFactory: highchartsFactory
+        }
     ],
     bootstrap: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA]

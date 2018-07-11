@@ -1,9 +1,6 @@
-<ngx-atom-spinner *ngIf="!loaded"
+<div>
+    <ngx-atom-spinner *ngIf="!loaded"
 ></ngx-atom-spinner>
-<div id="cpuGraph" style="min-width: 310px; height: 400px; margin: 0 auto">
+<chart *ngIf="loaded" type="StockChart" [options]="options">
+</chart>
 </div>
-<a href="http://10.1.0.3:4200/ema-graph">
-    <ngx-button style="color: #4066df">
-        Refreshing Refresh Button of Refreshment
-    </ngx-button>
-</a>
