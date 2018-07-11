@@ -12,6 +12,9 @@ export class DataDisplayComponent implements OnInit {
     private socket: any;
     private chart: any;
 
+    /*
+     *  Holds the options for the graph
+     */
     constructor(private fusionbot: FusionbotService) {
         this.options = {
             chart: {
@@ -22,11 +25,10 @@ export class DataDisplayComponent implements OnInit {
                         [1, 'rgb(28,32,41)']
                     ]
                 },
-                width: 1000,
                 margin: 50,
             },
             navigator: {
-                enable: true,
+                enabled: false,
                 handles: {
                     backgroundColor: '#a47cff',
                     borderColor: '#6300ff'
@@ -46,6 +48,8 @@ export class DataDisplayComponent implements OnInit {
             yAxis: {
                 min: 0.0,
                 max: 100,
+                opposite: false,
+                zIndex: 1,
                 title: {
                     text: 'Usage Percentage',
                     style: {
@@ -73,13 +77,14 @@ export class DataDisplayComponent implements OnInit {
                 }
             },
             lang: {
-                noData: 'Nichts zu anzeigen'
+                noData: 'No data to show'
             },
             noData: {
                 style: {
                     fontWeight: 'bold',
                     fontSize: '15px',
-                    color: '#DD3333'
+                    color: '#DD3333',
+                    zIndex: 10
                 }
             },
             legend: {
@@ -112,36 +117,36 @@ export class DataDisplayComponent implements OnInit {
             series: [{
                 name: 'CPU Utilization',
                 id: 'cpuUsage',
-                zIndex: 3,
+                zIndex: 4,
                 data: [],
-                showInNavigator: true,
+               // showInNavigator: true,
                 color: '#fff35d'
             }, {
                 name: 'AI Prediction',
                 data: [],
                 type: 'line',
-                zIndex: 2,
+                zIndex: 3,
 
                 color: '#6300ff'
 
             }, {
                 name: 'AI Error Margin',
                 data: [],
-                zIndex: 1,
+                zIndex: 2,
                 type: 'arearange',
 
                 color: '#a47cff'
 
             }, {
                 name: 'Anomaly',
-                zIndex: 4,
+                zIndex: 5,
                 data: [],
-                showInNavigator: true,
+              //  showInNavigator: true,
                 onSeries: 'cpuUsage',
                 type: 'scatter',
                 color: '#DD3333',
                 marker: {
-                    enabledThreshold: 5
+                    enabledThreshold: 6
                 },
                 id: 'anomaly',
             }]
@@ -149,7 +154,6 @@ export class DataDisplayComponent implements OnInit {
     }
 
     public options: any;
-    public loaded = false;
 
     saveInstance(chartInstance: any): void {
         this.chart = chartInstance;
@@ -159,7 +163,6 @@ export class DataDisplayComponent implements OnInit {
         this.socket = io(environment.socketUrl);
         this.socket.on('connect', () => {
             console.log('connected');
-            this.loaded = true;
         });
         this.socket.on('data', (data) => {
                 const graphData = data.data.map((d) => {
@@ -174,12 +177,13 @@ export class DataDisplayComponent implements OnInit {
                 const anomalies = data.anomalies.map((d) => {
                     return d;
                 });
-                console.log(emaGraphData);
+                console.log(data);
+            console.log(this.options.series);
 
-                this.options.series[0].data = graphData;
-                this.options.series[1].data = emaGraphData;
-                this.options.series[2].data = emsRanges;
-                this.options.series[3].data = anomalies;
+                this.chart.series[0].push(graphData, true);
+                this.chart.series[1].push(emaGraphData, true);
+                this.chart.series[2].push(emsRanges, true);
+                this.chart.series[3].push(anomalies, true);
                 this.chart.redraw();
             }
         );

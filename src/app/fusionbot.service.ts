@@ -14,7 +14,7 @@ export class FusionbotService {
 
     getData(): Observable<any> {
 
-        console.log('test', environment.restUrl);
+        console.log('test', environment.socketUrl);
 
         return this.http.get(environment.restUrl)
             .pipe(map((response: any) => {

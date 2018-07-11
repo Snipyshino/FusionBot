@@ -17,13 +17,15 @@ export class AppComponent {
                     this.router.navigate(['ema-graph']);
                 },
                 tooltip: 'EMA Line Graph',
-                active: false
+                active: true
+            },
+            {
+                icon: 'icon-alert',
+                click: () => {
+                     this.router.navigate(['anomalies']);
+             },
+                tooltip: 'Anomaly List',
+                active: true
             }
-            // {
-            //     icon: 'icon-alert',
-            //     click: () => {
-            //          this.router.navigate(['anomaly-list']);
-            //  }
-            // }
         ];
 }

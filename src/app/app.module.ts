@@ -8,6 +8,7 @@ import {NgxUIModule} from '@intergral/kaleidoscope';
 import { ChartModule } from 'angular2-highcharts';
 import {HttpClientModule} from '@angular/common/http';
 import {HighchartsStatic} from 'angular2-highcharts/dist/HighchartsService';
+import {AnomalyListComponent} from './anomaly-list/anomaly-list.component';
 
 export function highchartsFactory() {
     const hm = require('highcharts/highcharts-more');
@@ -30,7 +31,8 @@ declare var require: any;
 @NgModule({
     declarations: [
         AppComponent,
-        DataDisplayComponent
+        DataDisplayComponent,
+        AnomalyListComponent
     ],
     imports: [
         BrowserModule,
@@ -47,6 +49,10 @@ declare var require: any;
             {
                 path: 'ema-graph',
                 component: DataDisplayComponent,
+            },
+            {
+                path: 'anomalies',
+                component: AnomalyListComponent
             }
         ])
     ],
