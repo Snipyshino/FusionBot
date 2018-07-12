@@ -16,7 +16,7 @@ export class FusionbotService {
 
         console.log('test', environment.socketUrl);
 
-        return this.http.get(environment.restUrl)
+        return this.http.get(environment.socketUrl)
             .pipe(map((response: any) => {
                 return response;
             }));
