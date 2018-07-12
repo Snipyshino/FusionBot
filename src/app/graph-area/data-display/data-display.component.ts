@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import * as io from 'socket.io-client';
+import {isNull} from 'util';
 
 @Component({
     selector: 'app-data-display',
@@ -189,7 +190,7 @@ export class DataDisplayComponent implements OnInit {
     }
 
     getAnomaly(data: any): String {
-        if (data.anomaly == false) {
+        if (!isNull(data.anomaly) || data.anomaly) {
             return '#DD3333';
         } else {
             return '#fff35d';
