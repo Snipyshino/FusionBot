@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-    socketUrl: 'http://10.5.0.103:3001',
+    // socketUrl: 'http://10.5.0.103:3001',
+    socketUrl: 'http://localhost:3001',
 };
 
 /*

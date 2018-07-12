@@ -212,7 +212,7 @@ export class DataDisplayComponent implements OnInit {
                 this.extractData(0, parseFloat(data.data));
                 this.extractData(1, parseFloat(data.ema));
                 try {
-                    this.extractData(2, ([data.time, parseFloat(data.lowems), parseFloat(data.highems)]));
+                    this.extractData(2, ([data.time, parseFloat(data.lems), parseFloat(data.hems)]));
                 } catch (e) {
                     this.extractData(2, data.allEms);
                 }
