@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FusionbotService} from '../../core/services/fusionbot.service';
 import {environment} from '../../../environments/environment';
 import * as io from 'socket.io-client';
-import {$} from 'protractor';
-import {Options} from 'highcharts/highstock';
 
 @Component({
     selector: 'app-data-display',
@@ -17,7 +14,7 @@ export class DataDisplayComponent implements OnInit {
     /*
      *  Holds the options for the graph
      */
-    constructor(private fusionbot: FusionbotService) {
+    constructor() {
         this.options = {
             chart: {
                 backgroundColor: {
@@ -27,7 +24,7 @@ export class DataDisplayComponent implements OnInit {
                         [1, 'rgb(28,32,41)']
                     ]
                 },
-                width: 1920,
+                width: 1800,
                 height: 800,
             },
             navigator: {
@@ -39,7 +36,7 @@ export class DataDisplayComponent implements OnInit {
                 maskFill: 'rgba(38,32,51, 0.50)'
             },
             rangeSelector: {
-                enabled: true,
+                enabled: false,
             },
             title: {
                 text: 'CPU Utilization',
@@ -85,10 +82,10 @@ export class DataDisplayComponent implements OnInit {
             noData: {
                 style: {
                     fontWeight: 'bold',
-                    fontSize: '15px',
+                    fontSize: '40px',
                     color: '#DD3333',
                     zIndex: 10
-                }
+                },
             },
             legend: {
                 enabled: true,
@@ -113,10 +110,10 @@ export class DataDisplayComponent implements OnInit {
                 // valueDecimals: 1,
                 valueSuffix: '%'
             },
-            plotOptions: {
-                series: {
-                    boostThreshold: 2000,
-                }
+            boost: {
+                allowForce: true,
+                seriesThreshold: 1500,
+                useGPUTranslations: true
             },
             series: [{
                 name: 'CPU Utilization',
@@ -126,11 +123,11 @@ export class DataDisplayComponent implements OnInit {
                 zIndex: 4,
                 data: [],
                 showInNavigator: true,
-                color: '#fff35d',
+                color: this.getAnomaly(null),
                 marker: {
-                //    enabledThreshold: 5,
-                    color: '#fff35d',
-                    shape: 'circle'
+                    enabledThreshold: 5,
+                    shape: 'circle',
+                    radius: 4,
                 }
             }, {
                 name: 'AI Prediction',
@@ -154,29 +151,29 @@ export class DataDisplayComponent implements OnInit {
                 color: '#a47cff'
 
             }
-                , {
-                    name: 'Anomaly',
-                    visible: false,
-                    zIndex: 5,
-                    data: [],
-                    showInNavigator: true,
-                    onSeries: 'cpuUsage',
-                    pointStart: Date.now(),
-                    pointInterval: 3600000,
-                    type: 'flags',
-                    allowOverlapX: true,
-                    cropThreshold: 10,
-                    shape: 'circlepin',
-                    dataLabels: {},
-                    labels: {},
-                    color: '#DD3333',
-                    marker: {
-                        symbol: 'circle',
-                        enabled: null,
-                        enabledThreshold: 100,
-                    },
-                    id: 'anomaly',
-                }
+                // , {
+                //     name: 'Anomaly',
+                //     visible: true,
+                //     zIndex: 5,
+                //     data: [],
+                //     showInNavigator: true,
+                //     onSeries: 'cpuUsage',
+                //     pointStart: Date.now(),
+                //     pointInterval: 3600000,
+                //     type: 'flags',
+                //     allowOverlapX: true,
+                //     cropThreshold: 10,
+                //     shape: 'circlepin',
+                //     dataLabels: {},
+                //     labels: {},
+                //     color: '#DD3333',
+                //     marker: {
+                //         symbol: 'circle',
+                //         enabled: null,
+                //         enabledThreshold: 100,
+                //     },
+                //     id: 'anomaly',
+                // }
             ]
         };
     }
@@ -185,6 +182,18 @@ export class DataDisplayComponent implements OnInit {
 
     saveInstance(chartInstance: any): void {
         this.chart = chartInstance;
+    }
+
+    extractData(seriesNum: number, dataName: any) {
+        this.chart.series[seriesNum].addPoint(dataName);
+    }
+
+    getAnomaly(data: any): String {
+        if (data.anomaly == false) {
+            return '#DD3333';
+        } else {
+            return '#fff35d';
+        }
     }
 
     ngOnInit() {
@@ -208,11 +217,10 @@ export class DataDisplayComponent implements OnInit {
                 console.log(data);
                 console.log(this.options.series);
 
-                this.chart.series[0].addPoint(parseFloat(data.data));
-                this.chart.series[1].addPoint(parseFloat(data.ema));
-                this.chart.series[2].addPoint(data.allEms);
-                this.chart.series[3].addPoint(data.anomalies);
-                this.chart.reflow();
+                this.extractData(0, parseFloat(data.data));
+                this.extractData(1, parseFloat(data.ema));
+                this.extractData(2, data.allEms);
+                this.chart.redraw();
             }
         );
     }

@@ -7,6 +7,7 @@ export const environment = {
     restUrl: 'http://10.1.0.2:3000',
     // socketUrl: 'http://10.1.0.2:3001',
     socketUrl: 'http://10.5.0.103:3001',
+    // socketUrl: 'http://10.1.0.3:3001',
 };
 
 /*
