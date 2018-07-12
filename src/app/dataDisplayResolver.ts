@@ -2,7 +2,7 @@
 import {ActivatedRouteSnapshot, Resolve} from '@angular/router';
 import {Observable} from 'rxjs/internal/Observable';
 import {Injectable} from '@angular/core';
-import {FusionbotService} from './fusionbot.service';
+import {FusionbotService} from './core/services/fusionbot.service';
 
 @Injectable()
 export class GraphResolver implements Resolve<Response> {

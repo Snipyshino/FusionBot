@@ -13,15 +13,13 @@ import {AnomalyListComponent} from './anomaly-list/anomaly-list.component';
 export function highchartsFactory() {
     const hm = require('highcharts/highcharts-more');
     const hc = require('highcharts/highstock');
-    const hce = require('highcharts/indicators/ema');
-    const hci = require('highcharts/indicators/indicators');
     const dd = require('highcharts/modules/exporting');
     const ndm = require('highcharts/modules/no-data-to-display');
+    const bm = require('highcharts/modules/boost');
     dd(hc);
+    bm(hc);
     ndm(hc);
     hm(hc);
-    hci(hc);
-    hce(hc);
     return hc;
 }
 
@@ -32,7 +30,7 @@ declare var require: any;
     declarations: [
         AppComponent,
         DataDisplayComponent,
-        AnomalyListComponent
+        AnomalyListComponent,
     ],
     imports: [
         BrowserModule,

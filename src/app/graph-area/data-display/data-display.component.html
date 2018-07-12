@@ -1,9 +1,11 @@
-<div style="position: relative; left: 15%; right: 15%; max-width: 70%;">
-    <section class="section">
-        <ngx-section class="shadow ngx-section" [padding]="'1.8em'">
-            <chart type="StockChart" style="border: 1px solid red; min-width: 1000px; max-height: 800px" [options]="options"
+<!--<div style="position: relative; left: 10%; right: 10%; max-width: 80%;">-->
+    <!--<section class="section">-->
+        <!--<ngx-section class="shadow ngx-section" [padding]="'1.8em'" align="center">-->
+            <chart type="StockChart"
+                   align="center"
+                   [options]="options"
                    (load)="saveInstance($event.context)">
             </chart>
-        </ngx-section>
-    </section>
-</div>
+        <!--</ngx-section>-->
+    <!--</section>-->
+<!--</div>-->

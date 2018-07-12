@@ -1,57 +1,16 @@
-<p>
-    a thing that exists, sooon
-</p>
-<!--<div style="position: relative; flex: 1 1 100%; box-sizing: border-box; left: 15%; right: 15%; max-width: 70%;"-->
-     <!--ng-reflect-ng-style="[object Object]" ng-reflect-flex="85">-->
-    <!--<section class="section">-->
-        <!--<ngx-section class="shadow ngx-section" [padding]="'1.8em'">-->
-            <!--<ngx-split-section title="anomaly!"-->
-                               <!--class="default-spacer"-->
-                               <!--id="anomaly-List"-->
-            <!--&gt;-->
-                <!--<ngx-input-->
-                        <!--id="title"-->
-                        <!--[type]="'text'"-->
-                        <!--[label]="'Title'"-->
-                        <!--[(ngModel)]="tempTask.title">-->
-                <!--</ngx-input>-->
-                <!--<ngx-input-->
-                        <!--id="body"-->
-                        <!--[type]="'textarea'"-->
-                        <!--[hint]="'Input task to do today'"-->
-                        <!--[label]="inputLabel"-->
-                        <!--[(ngModel)]="tempTask.body">-->
-                <!--</ngx-input>-->
-                <!--<ngx-button [(ngModel)]="addState" (click)="onSave('button click')" class="btn"-->
-                            <!--[disabled]="false"-->
-                <!--&gt;-->
-                    <!--<i class="icon icon-save"></i>-->
-                    <!--Save-->
-                <!--</ngx-button>-->
-                <!--<div class="glow-red-600"-->
-                     <!--dbl-click-copy-->
-                     <!--*ngFor="let task of taskList | anomalyCheckedPipe:false">-->
-                    <!--<app-task-detail-->
-                            <!--[task]="task"-->
-                            <!--class="new"-->
-                            <!--(delete)="taskDeleted($event)">-->
-                    <!--</app-task-detail>-->
-                <!--</div>-->
-            <!--</ngx-split-section>-->
 
-            <!--<ngx-split-section title="done!"-->
-                               <!--[noUnderline]="true"-->
-                               <!--id="done-List">-->
-                <!--<div-->
-                        <!--class="glow-green-600"-->
-                        <!--*ngFor="let task of taskList | anomalyCheckedPipe:true">-->
-                    <!--<app-task-detail-->
-                            <!--class='completed'-->
-                            <!--[task]="task"-->
-                            <!--(delete)="taskDeleted($event)">-->
-                    <!--</app-task-detail>-->
-                <!--</div>-->
-            <!--</ngx-split-section>-->
-        <!--</ngx-section>-->
-    <!--</section>-->
-<!--</div>-->
+<div style="position: center; flex: 1 1 100%; box-sizing: border-box; left: 15%; right: 15%; max-width: 70%;"
+     ng-reflect-ng-style="[object Object]" ng-reflect-flex="85">
+    <section class="section">
+        <ngx-section class="shadow ngx-section" [padding]="'1.8em'">
+            <ngx-split-section title="anomaly!"
+                               class="default-spacer"
+                               id="anomaly-List">
+            </ngx-split-section>
+            <ngx-split-section title="done!"
+                               [noUnderline]="true"
+                               id="done-List">
+            </ngx-split-section>
+        </ngx-section>
+    </section>
+</div>

@@ -110,7 +110,7 @@ export class DataDisplayComponent implements OnInit {
             tooltip: {
                 crosshairs: true,
                 shared: true,
-                valueDecimals: 1,
+                // valueDecimals: 1,
                 valueSuffix: '%'
             },
             plotOptions: {
@@ -128,7 +128,7 @@ export class DataDisplayComponent implements OnInit {
                 showInNavigator: true,
                 color: '#fff35d',
                 marker: {
-                    enabledThreshold: 5,
+                //    enabledThreshold: 5,
                     color: '#fff35d',
                     shape: 'circle'
                 }
