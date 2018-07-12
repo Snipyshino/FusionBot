@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FusionbotService} from '../../fusionbot.service';
+import {FusionbotService} from '../../core/services/fusionbot.service';
 import {environment} from '../../../environments/environment';
 import * as io from 'socket.io-client';
+import {$} from 'protractor';
+import {Options} from 'highcharts/highstock';
 
 @Component({
     selector: 'app-data-display',
@@ -25,10 +27,11 @@ export class DataDisplayComponent implements OnInit {
                         [1, 'rgb(28,32,41)']
                     ]
                 },
-                margin: 50,
+                width: 1920,
+                height: 800,
             },
             navigator: {
-                enabled: false,
+                enabled: true,
                 handles: {
                     backgroundColor: '#a47cff',
                     borderColor: '#6300ff'
@@ -36,7 +39,7 @@ export class DataDisplayComponent implements OnInit {
                 maskFill: 'rgba(38,32,51, 0.50)'
             },
             rangeSelector: {
-                enabled: false,
+                enabled: true,
             },
             title: {
                 text: 'CPU Utilization',
@@ -107,49 +110,74 @@ export class DataDisplayComponent implements OnInit {
             tooltip: {
                 crosshairs: true,
                 shared: true,
+                valueDecimals: 1,
                 valueSuffix: '%'
             },
             plotOptions: {
                 series: {
-                    turboThreshold: 3000
+                    boostThreshold: 2000,
                 }
             },
             series: [{
                 name: 'CPU Utilization',
                 id: 'cpuUsage',
+                pointStart: Date.now(),
+                pointInterval: 3600000,
                 zIndex: 4,
                 data: [],
-               // showInNavigator: true,
-                color: '#fff35d'
+                showInNavigator: true,
+                color: '#fff35d',
+                marker: {
+                    enabledThreshold: 5,
+                    color: '#fff35d',
+                    shape: 'circle'
+                }
             }, {
                 name: 'AI Prediction',
                 data: [],
+                pointStart: Date.now(),
+                pointInterval: 3600000,
                 type: 'line',
                 zIndex: 3,
-
+                visible: false,
                 color: '#6300ff'
 
             }, {
                 name: 'AI Error Margin',
                 data: [],
+                pointStart: Date.now(),
+                pointInterval: 3600000,
+                visible: false,
                 zIndex: 2,
                 type: 'arearange',
-
+                lineWidth: 0,
                 color: '#a47cff'
 
-            }, {
-                name: 'Anomaly',
-                zIndex: 5,
-                data: [],
-              //  showInNavigator: true,
-                onSeries: 'cpuUsage',
-                type: 'scatter',
-                color: '#DD3333',
-                marker: {
-                    enabledThreshold: 6
-                },
-                id: 'anomaly',
-            }]
+            }
+                , {
+                    name: 'Anomaly',
+                    visible: false,
+                    zIndex: 5,
+                    data: [],
+                    showInNavigator: true,
+                    onSeries: 'cpuUsage',
+                    pointStart: Date.now(),
+                    pointInterval: 3600000,
+                    type: 'flags',
+                    allowOverlapX: true,
+                    cropThreshold: 10,
+                    shape: 'circlepin',
+                    dataLabels: {},
+                    labels: {},
+                    color: '#DD3333',
+                    marker: {
+                        symbol: 'circle',
+                        enabled: null,
+                        enabledThreshold: 100,
+                    },
+                    id: 'anomaly',
+                }
+            ]
         };
     }
 
@@ -165,26 +193,26 @@ export class DataDisplayComponent implements OnInit {
             console.log('connected');
         });
         this.socket.on('data', (data) => {
-                const graphData = data.data.map((d) => {
-                    return parseFloat(d);
-                });
-                const emaGraphData = data.ema.map((d) => {
-                    return parseFloat(d);
-                });
-                const emsRanges = data.allEMS.map((d) => {
-                    return d;
-                });
-                const anomalies = data.anomalies.map((d) => {
-                    return d;
-                });
+                // const graphData = data.data.map((d) => {
+                //     return parseFloat(d);
+                // });
+                // const emaGraphData = data.ema.map((d) => {
+                //     return parseFloat(d);
+                // });
+                // const emsRanges = data.allEMS.map((d) => {
+                //     return d;
+                // });
+                // const anomalies = data.anomalies.map((d) => {
+                //     return d;
+                // });
                 console.log(data);
-            console.log(this.options.series);
+                console.log(this.options.series);
 
-                this.chart.series[0].push(graphData, true);
-                this.chart.series[1].push(emaGraphData, true);
-                this.chart.series[2].push(emsRanges, true);
-                this.chart.series[3].push(anomalies, true);
-                this.chart.redraw();
+                this.chart.series[0].addPoint(parseFloat(data.data));
+                this.chart.series[1].addPoint(parseFloat(data.ema));
+                this.chart.series[2].addPoint(data.allEms);
+                this.chart.series[3].addPoint(data.anomalies);
+                this.chart.reflow();
             }
         );
     }
