@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import * as io from 'socket.io-client';
-import {isNull} from 'util';
 
 @Component({
     selector: 'app-data-display',
@@ -124,7 +123,7 @@ export class DataDisplayComponent implements OnInit {
                 zIndex: 4,
                 data: [],
                 showInNavigator: true,
-                color: this.getAnomaly(null),
+                color: '#fff35d',
                 marker: {
                     enabledThreshold: 5,
                     shape: 'circle',
@@ -189,8 +188,8 @@ export class DataDisplayComponent implements OnInit {
         this.chart.series[seriesNum].addPoint(dataName);
     }
 
-    getAnomaly(data: any): String {
-        if (!isNull(data.anomaly) || data.anomaly) {
+    getAnomalyColor(data: any): String {
+        if (data.anomaly == true) {
             return '#DD3333';
         } else {
             return '#fff35d';
@@ -219,6 +218,7 @@ export class DataDisplayComponent implements OnInit {
                 console.log(this.options.series);
 
                 this.extractData(0, parseFloat(data.data));
+                // this..getAnomalyColor(data.anomaly);
                 this.extractData(1, parseFloat(data.ema));
                 this.extractData(2, data.allEms);
                 this.chart.redraw();
