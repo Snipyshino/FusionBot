@@ -79,6 +79,9 @@ export class DataDisplayComponent implements OnInit {
             lang: {
                 noData: 'No data to show'
             },
+            credits: {
+                enabled: false
+            },
             noData: {
                 style: {
                     fontWeight: 'bold',
@@ -119,11 +122,12 @@ export class DataDisplayComponent implements OnInit {
                 name: 'CPU Utilization',
                 id: 'cpuUsage',
                 pointStart: Date.now(),
+                color: '#fff35b',
                 pointInterval: 3600000,
                 zIndex: 4,
                 data: [],
                 showInNavigator: true,
-                color: '#fff35d',
+                // color: "#f73aff",
                 marker: {
                     enabledThreshold: 5,
                     shape: 'circle',
@@ -136,21 +140,21 @@ export class DataDisplayComponent implements OnInit {
                 pointInterval: 3600000,
                 type: 'line',
                 zIndex: 3,
-                visible: false,
+                visible: true,
                 color: '#6300ff'
 
             }, {
                 name: 'AI Error Margin',
                 data: [],
+                visible: true,
                 pointStart: Date.now(),
-                pointInterval: 3600000,
-                visible: false,
                 zIndex: 2,
                 type: 'arearange',
                 lineWidth: 0,
                 color: '#a47cff'
 
             }
+                /* Depreciated */
                 // , {
                 //     name: 'Anomaly',
                 //     visible: true,
@@ -185,11 +189,11 @@ export class DataDisplayComponent implements OnInit {
     }
 
     extractData(seriesNum: number, dataName: any) {
-        this.chart.series[seriesNum].addPoint(dataName);
+        this.chart.series[seriesNum].addPoint(dataName, true);
     }
 
-    getAnomalyColor(data: any): String {
-        if (data.anomaly == true) {
+    getAnomalyColor(data: boolean): String {
+        if (data) {
             return '#DD3333';
         } else {
             return '#fff35d';
@@ -202,25 +206,16 @@ export class DataDisplayComponent implements OnInit {
             console.log('connected');
         });
         this.socket.on('data', (data) => {
-                // const graphData = data.data.map((d) => {
-                //     return parseFloat(d);
-                // });
-                // const emaGraphData = data.ema.map((d) => {
-                //     return parseFloat(d);
-                // });
-                // const emsRanges = data.allEMS.map((d) => {
-                //     return d;
-                // });
-                // const anomalies = data.anomalies.map((d) => {
-                //     return d;
-                // });
                 console.log(data);
-                console.log(this.options.series);
-
+                this.options.series[0].color = this.getAnomalyColor(data.anomaly);
+                console.log(this.options.series.color);
                 this.extractData(0, parseFloat(data.data));
-                // this..getAnomalyColor(data.anomaly);
                 this.extractData(1, parseFloat(data.ema));
-                this.extractData(2, data.allEms);
+                try {
+                    this.extractData(2, ([data.time, parseFloat(data.lowems), parseFloat(data.highems)]));
+                } catch (e) {
+                    this.extractData(2, data.allEms);
+                }
                 this.chart.redraw();
             }
         );
