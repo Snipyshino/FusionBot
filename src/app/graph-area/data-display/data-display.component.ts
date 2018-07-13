@@ -46,8 +46,8 @@ export class DataDisplayComponent implements OnInit {
                 }
             },
             yAxis: {
-                min: 0.0,
-                max: 100,
+              //  min: 0.0,
+             //   max: 100,
                 opposite: false,
                 zIndex: 1,
                 title: {
