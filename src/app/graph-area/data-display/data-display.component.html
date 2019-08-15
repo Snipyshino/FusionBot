@@ -1,6 +1,11 @@
-<div>
-    <ngx-atom-spinner *ngIf="!loaded"
-></ngx-atom-spinner>
-<chart *ngIf="loaded" type="StockChart" [options]="options">
-</chart>
-</div>
+<!--<div style="position: relative; left: 10%; right: 10%; max-width: 80%;">-->
+    <!--<section class="section">-->
+        <!--<ngx-section class="shadow ngx-section" [padding]="'1.8em'" align="center">-->
+            <chart type="StockChart"
+                   align="center"
+                   [options]="options"
+                   (load)="saveInstance($event.context)">
+            </chart>
+        <!--</ngx-section>-->
+    <!--</section>-->
+<!--</div>-->

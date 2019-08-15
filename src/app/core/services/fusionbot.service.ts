@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {environment} from '../environments/environment';
+import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
 
 @Injectable({
@@ -14,9 +14,9 @@ export class FusionbotService {
 
     getData(): Observable<any> {
 
-        console.log('test', environment.restUrl);
+        console.log('test', environment.socketUrl);
 
-        return this.http.get(environment.restUrl)
+        return this.http.get(environment.socketUrl)
             .pipe(map((response: any) => {
                 return response;
             }));

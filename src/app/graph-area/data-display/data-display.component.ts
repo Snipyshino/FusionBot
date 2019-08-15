@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FusionbotService} from '../../fusionbot.service';
+import {environment} from '../../../environments/environment';
+import * as io from 'socket.io-client';
 
 @Component({
     selector: 'app-data-display',
@@ -7,8 +8,13 @@ import {FusionbotService} from '../../fusionbot.service';
     styleUrls: ['./data-display.component.css']
 })
 export class DataDisplayComponent implements OnInit {
+    private socket: any;
+    private chart: any;
 
-    constructor(private fusionbot: FusionbotService) {
+    /*
+     *  Holds the options for the graph
+     */
+    constructor() {
         this.options = {
             chart: {
                 backgroundColor: {
@@ -18,11 +24,11 @@ export class DataDisplayComponent implements OnInit {
                         [1, 'rgb(28,32,41)']
                     ]
                 },
-                width: 1000,
-                margin: 50,
+                width: 1800,
+                height: 800,
             },
             navigator: {
-                enable: true,
+                enabled: true,
                 handles: {
                     backgroundColor: '#a47cff',
                     borderColor: '#6300ff'
@@ -42,6 +48,8 @@ export class DataDisplayComponent implements OnInit {
             yAxis: {
                 min: 0.0,
                 max: 100,
+                opposite: false,
+                zIndex: 1,
                 title: {
                     text: 'Usage Percentage',
                     style: {
@@ -69,14 +77,18 @@ export class DataDisplayComponent implements OnInit {
                 }
             },
             lang: {
-                noData: 'Nichts zu anzeigen'
+                noData: 'No data to show'
+            },
+            credits: {
+                enabled: false
             },
             noData: {
                 style: {
                     fontWeight: 'bold',
-                    fontSize: '15px',
-                    color: '#DD3333'
-                }
+                    fontSize: '40px',
+                    color: '#DD3333',
+                    zIndex: 10
+                },
             },
             legend: {
                 enabled: true,
@@ -98,80 +110,113 @@ export class DataDisplayComponent implements OnInit {
             tooltip: {
                 crosshairs: true,
                 shared: true,
+                // valueDecimals: 1,
                 valueSuffix: '%'
             },
-            plotOptions: {
-                series: {
-                    turboThreshold: 3000
-                }
+            boost: {
+                allowForce: true,
+                seriesThreshold: 1500,
+                useGPUTranslations: true
             },
             series: [{
                 name: 'CPU Utilization',
                 id: 'cpuUsage',
-                zIndex: 3,
+                pointStart: Date.now(),
+                color: '#fff35b',
+                pointInterval: 3600000,
+                zIndex: 4,
                 data: [],
                 showInNavigator: true,
-                color: '#fff35d'
+                // color: "#f73aff",
+                marker: {
+                    enabledThreshold: 5,
+                    shape: 'circle',
+                    radius: 4,
+                }
             }, {
                 name: 'AI Prediction',
                 data: [],
+                pointStart: Date.now(),
+                pointInterval: 3600000,
                 type: 'line',
-                zIndex: 2,
-
-                    color: '#6300ff'
+                zIndex: 3,
+                visible: true,
+                color: '#6300ff'
 
             }, {
                 name: 'AI Error Margin',
                 data: [],
-                zIndex: 1,
+                visible: true,
+                pointStart: Date.now(),
+                zIndex: 2,
                 type: 'arearange',
+                lineWidth: 0,
+                color: '#a47cff'
 
-                    color: '#a47cff'
-
-            }, {
-                name: 'Anomaly',
-                zIndex: 4,
-                data: [],
-                showInNavigator: true,
-                onSeries: 'cpuUsage',
-                type: 'scatter',
-                color: '#DD3333',
-                marker: {
-                    enabledThreshold: 5
-                },
-                id: 'anomaly',
-            }]
+            }
+                /* Depreciated */
+                // , {
+                //     name: 'Anomaly',
+                //     visible: true,
+                //     zIndex: 5,
+                //     data: [],
+                //     showInNavigator: true,
+                //     onSeries: 'cpuUsage',
+                //     pointStart: Date.now(),
+                //     pointInterval: 3600000,
+                //     type: 'flags',
+                //     allowOverlapX: true,
+                //     cropThreshold: 10,
+                //     shape: 'circlepin',
+                //     dataLabels: {},
+                //     labels: {},
+                //     color: '#DD3333',
+                //     marker: {
+                //         symbol: 'circle',
+                //         enabled: null,
+                //         enabledThreshold: 100,
+                //     },
+                //     id: 'anomaly',
+                // }
+            ]
         };
     }
 
     public options: any;
-    public loaded = false;
+
+    saveInstance(chartInstance: any): void {
+        this.chart = chartInstance;
+    }
+
+    extractData(seriesNum: number, dataName: any) {
+        this.chart.series[seriesNum].addPoint(dataName, true);
+    }
+
+    getAnomalyColor(data: boolean): String {
+        if (data) {
+            return '#DD3333';
+        } else {
+            return '#fff35d';
+        }
+    }
 
     ngOnInit() {
-        this.fusionbot.getData().subscribe((data) => {
-                const graphData = data.data.map((d) => {
-                    return parseFloat(d);
-                });
-                const emaGraphData = data.ema.map((d) => {
-                    return parseFloat(d);
-                });
-                const emsRanges = data.allEMS.map((d) => {
-                    return d;
-                });
-                const anomalies = data.anomalies.map((d) => {
-                    return d;
-                });
-                console.log(emaGraphData);
-
-                this.options.series[0].data = graphData;
-                this.options.series[1].data = emaGraphData;
-                this.options.series[2].data = emsRanges;
-                this.options.series[3].data = anomalies;
-                console.log(this.options);
-
-                setTimeout(() => {
-                    this.loaded = true;
-                }, 5000);
+        this.socket = io(environment.socketUrl);
+        this.socket.on('connect', () => {
+            console.log('connected');
+        });
+        this.socket.on('data', (data) => {
+                console.log(data);
+                this.options.series[0].color = this.getAnomalyColor(data.anomaly);
+                console.log(this.options.series.color);
+                this.extractData(0, parseFloat(data.data));
+                this.extractData(1, parseFloat(data.ema));
+                try {
+                    this.extractData(2, ([data.time, parseFloat(data.lems), parseFloat(data.hems)]));
+                } catch (e) {
+                    this.extractData(2, data.allEms);
+                }
+                this.chart.redraw();
             }
         );
     }
